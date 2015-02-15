@@ -3,9 +3,11 @@
 > Release a new version of your Node-based project using hg/Mercurial
 
 Grunt task to automate the following tasks:
+- Check for uncommitted changes
 - Bump version in package.json
 - Commit to HG repo
 - Tag HG repo
+- Push to default destination
 
 ## Getting Started
 This plugin requires Grunt `~0.4.2`
@@ -52,7 +54,44 @@ Default value: `'release-<%= version %>'`
 
 The tag commit message.
 
+#### options.checkUncommittedChanges
+Type: `List`
+Default value: `[]`
+
+A list of options to be passed to 'hg status' to determine which files are shown (added, removed, deleted, etc.).
+If any files match, there are uncommitted changes in the working directory and the release will fail.
+
+#### options.push
+Type: `Boolean`
+Default value: `false`
+
+If true, push to the default destination.
+
 ### Usage Examples
+
+
+```js
+// Project configuration. 
+grunt.initConfig({
+  hg_release: {
+    options: {
+      // message to use in commit message when committing changes from version bump
+      commit: 'release-<%= version %>',
+
+      // message to use in commit message when adding tag
+      tag: 'release-<%= version %>',
+
+      // "hg status" is run with the following options. If any files
+      // match, indicating there are uncommitted changes, fail fast
+      checkUncommittedChanges: ['--added', '--deleted', '--modified', '--removed'],
+
+      // push changes after committing
+      push: true
+    }
+  }
+})
+
+```
 
 #### Patch release:
 ```js
